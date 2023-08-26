@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang='en'>
+
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script type="text/javascript"
+        src="https://github.com/nagix/chartjs-plugin-colorschemes/releases/download/v0.2.0/chartjs-plugin-colorschemes.min.js"></script>
+    <link href="static/table-style.css" rel="stylesheet" type="text/css">
+    <link href="static/detail-style.css" rel="stylesheet" type="text/css">
+    <link href="static/position.css" rel="stylesheet" type="text/css">
+    <title>ContestBoard</title>
+</head>
+<header class="headertop">
+    <nav id="global-nav">
+        <ul>
+            <li><a href="#div-charts">チャート一覧</a></li>
+            <li><a href="#div-mea">スコア/ログ</a></li>
+            <li><a href="#div-alp">アクセス解析</a></li>
+            <li><a href="#div-prof">プロファイラ</a></li>
+            <li><a href="#div-ptq">スロークエリ</a></li>
+        </ul>
+    </nav>
+</header>
+
+<body>
+    <input type='hidden' id="ScoreChartDataJSONStr" value=' {{ .ScoreChartDataJSONStr }} '>
+    <input type='hidden' id="AlpChartDataJSONStr" value=' {{ .AlpChartDataJSONStr }} '>
+    <input type='hidden' id="ProfChartDataJSONStr" value=' {{ .ProfChartDataJSONStr }} '>
+    <input type='hidden' id="PtqChartDataJSONStr" value=' {{ .PtqChartDataJSONStr }} '>
+    {{ $AlpURINumPerTable := .AlpURINumPerTable}}
+    {{ $colnum := .AlpColnumPerTable}}
+
+    <div id="chart-boxes"><br></div>
+    <div id="div-charts">
+        <br>
+        <br>
+        <h2 id="h-charts" class="head2">チャート一覧</h2>
+        <div style="width: 100%;">
+            <div id="score-box-top" style="width: 50%;" class="left-chart">
+                <canvas id="scoreChart"></canvas>
+            </div>
+            <div id="alp-box-top" style="width: 50%;" class="right-chart">
+                <canvas id="alpChart"></canvas>
+            </div>
+        </div>
+        <div class="float-clear-box"> </div>
+        <div style="width: 100%;">
+            <div id="prof-box-top" style="width: 50%;" class="left-chart">
+                <canvas id="profChart"></canvas>
+            </div>
+            <div id="ptq-box-top" style="width: 50%;" class="right-chart">
+                <canvas id="ptqChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="float-clear-box"> </div>
+    <div id="div-mea">
+        <br>
+        <br>
+        <h2 id="h-mea" class="head2">スコア/ログ</h2>
+        <div class="float-clear-box"> </div>
+        <div id="score-box" style="width: 50%;">
+            <canvas id="scoreChart2"></canvas>
+        </div>
+        <div class="float-clear-box"> </div>
+        <div id="mea-table">
+            <table border="1">
+                <tr>
+                    <th rowspan="2">計測ID</th>
+                    <th rowspan="2">計測時刻</th>
+                    <th rowspan="2">スコア</th>
+                    <th rowspan="2">param</th>
+                    <th rowspan="2">メモ</th>
+                    <th colspan="3">生ログ</th>
+                    <th colspan="5">解析結果</th>
+                </tr>
+                <tr>
+                    <th>nginx</th>
+                    <th>app</th>
+                    <th>sql</th>
+                    <th>alp</th>
+                    <th>prof</th>
+                    <th>pt-<br>query</th>
+                    <th>top20<br>slow<br>query</th>
+                    <th>top20<br>slow<br>plan</th>
+                </tr>
+                {{ range .Measurements }}
+                <div>
+                    <tr>
+                        <td>{{ .Measurementid }}
+                            <form method="post" id="form" action="deleteMeasurement" target="iframeForNoTransition"
+                                onSubmit="return check()">
+                                <input type="hidden" name="mid" value="{{ .Measurementid }}">
+                                <button class="btn-send">削除</button>
+                            </form>
+                        </td>
+                        <!-- 時刻表示はJST -->
+                        <td>{{ .MeasurementTime.Format "15:04:05" }}</td>
+                        <td align="right">
+                            <form method="post" id="form" action="fixMeasurement" target="iframeForNoTransition">
+                                <input type="text" size="5" name="score" value="{{ .Score }}">
+                                <input type="hidden" name="mid" value="{{ .Measurementid }}">
+                                <button class="btn-send">更</button>
+                            </form>
+                        </td>
+                        <td align="right">
+                            <form method="post" id="form" action="fixMeasurement" target="iframeForNoTransition">
+                                <textarea class="param" name="param" cols="35">{{ .Param }}</textarea>
+                                <input type="hidden" name="mid" value="{{ .Measurementid }}">
+                                <button class="btn-send">更</button>
+                            </form>
+                        </td>
+                        <td align="right">
+                            <form method="post" id="form" action="fixMeasurement" target="iframeForNoTransition">
+                                <!-- <input type="text" size="35" name="memo" value="{{ .Memo }}"> -->
+                                <textarea class="memo" name="memo" cols="35">{{ .Memo }}</textarea>
+                                <input type="hidden" name="mid" value="{{ .Measurementid }}">
+                                <button class="btn-send">更</button>
+                            </form>
+                        </td>
+
+                        {{ if eq .NginxAccUrl "-" }}<td>-</td>{{ else }}
+                        <td><a href="{{ .NginxAccUrl }}" target="_blank" rel="noopener noreferrer">DL</a></td>
+                        {{ end }}
+
+                        {{ if eq .AppUrl "-" }}<td>-</td>{{ else }}
+                        <td><a href="{{ .AppUrl }}" target="_blank" rel="noopener noreferrer">DL</a></td>
+                        {{ end }}
+
+                        {{ if eq .MysqlUrl "-" }}<td>-</td>{{ else }}
+                        <td><a href="{{ .MysqlUrl }}" target="_blank" rel="noopener noreferrer">DL</a></td>
+                        {{ end }}
+
+                        {{ if eq .AlpUrl "-" }}<td>-</td>{{ else }}
+                        <td><a href="{{ .AlpUrl }}" target="_blank" rel="noopener noreferrer">DL</a></td>
+                        {{ end }}
+
+                        {{ if eq .ProfUrl "-" }}<td>-</td>{{ else }}
+                        <td><a href="{{ .ProfUrl }}" target="_blank" rel="noopener noreferrer">DL</a></td>
+                        {{ end }}
+
+                        {{ if eq .PtqUrl "-" }}<td>-</td>{{ else }}
+                        <td><a href="{{ .PtqUrl }}" target="_blank" rel="noopener noreferrer">DL</a></td>
+                        {{ end }}
+
+                        {{ if eq .TopslowqStateUrl "-" }}<td>-</td>{{ else }}
+                        <td><a href="{{ .TopslowqStateUrl }}" target="_blank" rel="noopener noreferrer">DL</a></td>
+                        {{ end }}
+
+                        {{ if eq .TopslowqPlanUrl "-" }}<td>-</td>{{ else }}
+                        <td><a href="{{ .TopslowqPlanUrl }}" target="_blank" rel="noopener noreferrer">DL</a></td>
+                        {{ end }}
+
+                    </tr>
+                </div>
+                {{ end }}
+                <iframe name="iframeForNoTransition" style="width:0px;height:0px;border:0px;"></iframe>
+            </table>
+        </div>
+    </div>
+    <div class="float-clear-box"> </div>
+    <div id="div-alp" class="time-result-table">
+        <br>
+        <br>
+        <h2 id="h-alp" class="head2">アクセス解析</h2>
+        <div class="float-clear-box"> </div>
+        <div id="alp-box" style="width: 80%; min-width: 600px;">
+            <canvas id="alpChart2"></canvas>
+        </div>
+        <div class="float-clear-box"> </div>
+        {{ range $k, $x := .DividedAlpTables}}
+        <div id="alp-table">
+            <script>
+                document.write("<h3 class=\"head3\">TOP " + ({{ $k }} * {{ $AlpURINumPerTable }} + 1) + "-" + (({{ $k }} + 1) * {{ $AlpURINumPerTable }}) + " URI (最新Sum降順)</h3>");
+            </script>
+            <table align="left" border="1">
+                <tr>
+                    <th rowspan="3">計測<br>ID</th>
+                    <th colspan="{{$colnum}}">URI</th>
+                </tr>
+                <tr>
+                    {{range $k, $v := .TimeResultTableRowMap}}
+                    <th text-align="left" valign="top" colspan="3">
+                        {{ $k }}</th>
+                    {{end}}
+                </tr>
+                <tr>
+                    <script>
+                        var dog = {{ $AlpURINumPerTable }};
+                        for (var i = 0; i < dog; i++) {
+                            document.write("<th>Sum</th><th>Avg</th ><th>Count</th>");
+                        }
+                    </script>
+                </tr>
+                {{range $i, $v := .Measurementids}}
+                <tr>
+                    <td text-align="right">{{$v}}</td>
+                    {{range $j, $w := $x.TimeResultTableRowMap}}
+                    <td text-align="right">{{index $w.Sums $i}}</td>
+                    <td text-align="right">{{index $w.Avgs $i}}</td>
+                    <td text-align="right">{{index $w.Counts $i}}</td>
+                    {{end}}
+                </tr>
+                {{end}}
+            </table>
+            <div class="float-clear-box"> </div>
+        </div>
+        {{end}}
+    </div>
+    <div class="float-clear-box"> </div>
+    <div id="div-prof" class="time-result-table">
+        <br>
+        <br>
+        <h2 id="h-prof" class="head2">プロファイラ</h2>
+        <div class="float-clear-box"> </div>
+        <div id="prof-box" style="width: 80%; min-width: 600px;">
+            <canvas id="profChart2"></canvas>
+        </div>
+        <div class="float-clear-box"> </div>
+        {{ range $k, $x := .DividedProfTables}}
+        <div id="prof-table">
+            <script>
+                document.write("<h3 class=\"head3\">TOP " + ({{ $k }} * {{ $AlpURINumPerTable }} + 1) + "-" + (({{ $k }} + 1) * {{ $AlpURINumPerTable }}) + " 関数(or関数の一部) (最新Sum降順)</h3>");
+            </script>
+            <table align="left" border="1">
+                <tr>
+                    <th rowspan="3">計測<br>ID</th>
+                    <th colspan="{{$colnum}}">URI</th>
+                </tr>
+                <tr>
+                    {{range $k, $v := .TimeResultTableRowMap}}
+                    <th text-align="left" valign="top" colspan="3">
+                        {{ $k }}</th>
+                    {{end}}
+                </tr>
+                <tr>
+                    <script>
+                        var dog = {{ $AlpURINumPerTable }};
+                        for (var i = 0; i < dog; i++) {
+                            document.write("<th>Sum</th><th>Avg</th ><th>Count</th>");
+                        }
+                    </script>
+                </tr>
+                {{range $i, $v := .Measurementids}}
+                <tr>
+                    <td text-align="right">{{$v}}</td>
+                    {{range $j, $w := $x.TimeResultTableRowMap}}
+                    <td text-align="right">{{index $w.Sums $i}}</td>
+                    <td text-align="right">{{index $w.Avgs $i}}</td>
+                    <td text-align="right">{{index $w.Counts $i}}</td>
+                    {{end}}
+                </tr>
+                {{end}}
+            </table>
+            <div class="float-clear-box"> </div>
+        </div>
+        {{end}}
+    </div>
+    <div class="float-clear-box"> </div>
+    <div id="div-ptq" class="time-result-table">
+        <br>
+        <br>
+        <h2 id="h-ptq" class="head2">スロークエリ</h2>
+        <div class="float-clear-box"> </div>
+        <div id="ptq-box" style="width: 80%; min-width: 600px;" class="left-chart">
+            <canvas id="ptqChart2"></canvas>
+        </div>
+        <div class="float-clear-box"> </div>
+        {{ range $k, $x := .DividedPtqTables}}
+        <div id="ptq-table">
+            <script>
+                document.write("<h3 class=\"head3\">TOP " + ({{ $k }} * {{ $AlpURINumPerTable }} + 1) + "-" + (({{ $k }} + 1) * {{ $AlpURINumPerTable }}) + " クエリ (最新Sum降順)</h3>");
+            </script>
+            <table align="left" border="1">
+                <tr>
+                    <th rowspan="3">計測<br>ID</th>
+                    <th colspan="{{$colnum}}">URI</th>
+                </tr>
+                <tr>
+                    {{range $k, $v := .TimeResultTableRowMap}}
+                    <th text-align="left" valign="top" colspan="3">
+                        {{ $k }}</th>
+                    {{end}}
+                </tr>
+                <tr>
+                    <script>
+                        var dog = {{ $AlpURINumPerTable }};
+                        for (var i = 0; i < dog; i++) {
+                            document.write("<th>Sum</th><th>Avg</th ><th>Count</th>");
+                        }
+                    </script>
+                </tr>
+                {{range $i, $v := .Measurementids}}
+                <tr>
+                    <td text-align="right">{{$v}}</td>
+                    {{range $j, $w := $x.TimeResultTableRowMap}}
+                    <td text-align="right">{{index $w.Sums $i}}</td>
+                    <td text-align="right">{{index $w.Avgs $i}}</td>
+                    <td text-align="right">{{index $w.Counts $i}}</td>
+                    {{end}}
+                </tr>
+                {{end}}
+            </table>
+            <div class="float-clear-box"> </div>
+            クエリ詳細
+            <br>
+            <table align="left" border="1">
+                {{range $k, $v := .TimeResultTableRowMap}}
+                <tr>
+                    <th text-align="left" valign="top" rowspan="3">
+                        {{ $v.QueryID }}</th>
+                    <th>Checksum</th>
+                    <td>{{ $v.Checksum }}</td>
+                </tr>
+                <tr>
+                    <th>Fingerprint</th>
+                    <td text-align="left">{{ $v.Fingerprint }}</td>
+                </tr>
+                <tr>
+                    <th>Sample</th>
+                    <td text-align="left">{{ $v.Rawsql }}</td>
+                </tr>
+                {{end}}
+                <!-- <tr>
+                    <script>
+                        var dog = {{ $AlpURINumPerTable }};
+                        for (var i = 0; i < dog; i++) {
+                            document.write("<th>Sum</th><th>Avg</th ><th>Count</th>");
+                        }
+                    </script>
+                </tr>
+                {{range $i, $v := .Measurementids}}
+                <tr>
+                    <td text-align="right">{{$v}}</td>
+                    {{range $j, $w := $x.TimeResultTableRowMap}}
+                    <td text-align="right">{{index $w.Sums $i}}</td>
+                    <td text-align="right">{{index $w.Avgs $i}}</td>
+                    <td text-align="right">{{index $w.Counts $i}}</td>
+                    {{end}}
+                </tr>
+                {{end}} -->
+            </table>
+            <div class="float-clear-box"> </div>
+        </div>
+        {{end}}
+    </div>
+    <script src="/static/main.js"></script>
+</body>
+
+
+<script>
+    // テキストエリアの高さ自動調整
+    setTimeout(
+        function () {
+            $textarea = document.getElementsByClassName('memo');
+            $textareas = Array.from($textarea);
+            $textareas.forEach(textarea => {
+                var hei = textarea.scrollHeight / 14
+                var rown = textarea.value.match(/\n/g);
+                var rn = 0
+                var cn = 35
+                if (rown === null) {
+                    rn = 1
+                    if (textarea.value.length > cn) {
+                        cn = textarea.value.length
+                    }
+                } else {
+                    rn = textarea.value.match(/\n/g).length
+                    lines = textarea.value.split(/\n/)
+                    lines.forEach(line => {
+                        if (line.length > cn) {
+                            cn = line.length
+                        }
+                    })
+                }
+                if (rn > 1) {
+                    rn = rn + 2
+                }
+                if (cn > 80) {
+                    cn = 80
+                    rn = rn + 1
+                }
+
+                textarea.setAttribute("rows", rn)
+                textarea.setAttribute("cols", cn)
+            });
+        }, 0);
+    setTimeout(
+        function () {
+            $textarea = document.getElementsByClassName('param');
+            $textareas = Array.from($textarea);
+            $textareas.forEach(textarea => {
+                var hei = textarea.scrollHeight / 14
+                var rown = textarea.value.match(/\n/g);
+                var rn = 0
+                var cn = 10
+                if (rown === null) {
+                    rn = 1
+                    if (textarea.value.length > cn) {
+                        cn = textarea.value.length
+                    }
+                } else {
+                    rn = textarea.value.match(/\n/g).length
+                    lines = textarea.value.split(/\n/)
+                    lines.forEach(line => {
+                        if (line.length > cn) {
+                            cn = line.length
+                        }
+                    })
+                }
+                if (rn > 1) {
+                    rn = rn + 2
+                }
+                if (cn > 80) {
+                    cn = 80
+                    rn = rn + 1
+                }
+
+                textarea.setAttribute("rows", rn)
+                textarea.setAttribute("cols", cn)
+            });
+        }, 0);
+</script>
+
+</html>

@@ -1,0 +1,200 @@
+#mea-table table {
+  width: auto;
+  border-spacing: 0;
+  font-size:14px;
+}
+#mea-table table th {
+  color: #fff;
+  padding: 2px 10px;
+  background: #258;
+  background:-moz-linear-gradient(rgba(34,85,136,0.7), rgba(34,85,136,0.9) 50%);
+  background:-webkit-gradient(linear, 100% 0%, 100% 50%, from(rgba(34,85,136,0.7)), to(rgba(34,85,136,0.9)));
+  font-weight: bold;
+  border-left:1px solid #258;
+  border-top:1px solid #258;
+  border-bottom:1px solid #258;
+  line-height: 120%;
+  text-align: center;
+  text-shadow:0 -1px 0 rgba(34,85,136,0.9);
+  box-shadow: 0px 1px 1px rgba(255,255,255,0.3) inset;
+}
+#mea-table table th:first-child {
+  border-radius: 5px 0 0 0;	
+}
+#mea-table table th:last-child {
+  border-radius:0 5px 0 0;
+  border-right:1px solid #258;
+  box-shadow: 2px 2px 1px rgba(0,0,0,0.1),0px 1px 1px rgba(255,255,255,0.3) inset;
+}
+#mea-table table tr td {
+  padding: 5px 10px;
+  border-bottom: 1px solid #84b2e0;
+  border-left: 1px solid #84b2e0;
+  text-align: center;
+}
+#mea-table table tr td:last-child {
+  border-right: 1px solid #84b2e0;
+  box-shadow: 2px 2px 1px rgba(0,0,0,0.1);
+}
+#mea-table table tr {
+  background: #fff;
+}
+#mea-table table tr:nth-child(2n+1) {
+  background: #f1f6fc;
+}
+#mea-table table tr:last-child td {
+  box-shadow: 2px 2px 1px rgba(0,0,0,0.1);
+}
+#mea-table table tr:last-child td:first-child {
+  border-radius: 0 0 0 5px;
+}
+#mea-table table tr:last-child td:last-child {
+  border-radius: 0 0 5px 0;
+}
+#mea-table table tr:hover {
+  background: #bbd4ee;
+  cursor:pointer;
+}
+
+.time-result-table table {
+  width: auto;
+  border-spacing: 0;
+  font-size:14px;
+  margin-left:0px;margin-right:auto;
+}
+.time-result-table table th {
+  color: #000;
+  padding: 2px 10px;
+  /* font-family: 'メイリオ', 'Meiryo'; */
+  background: #eee;
+  background:-moz-linear-gradient(#eee, #ddd 50%);
+  background:-webkit-gradient(linear, 100% 0%, 100% 50%, from(#eee), to(#ddd));
+  /* font-weight: bold; */
+  border-top:1px solid #aaa;
+  border-bottom:1px solid #aaa;
+  line-height: 120%;
+  /* text-align: center; */
+  /* text-shadow:0 -1px 0 rgba(255,255,255,0.9); */
+  box-shadow: 0px 1px 1px rgba(255,255,255,0.3) inset;
+}
+.time-result-table table th:first-child {
+  border-left:1px solid #aaa;
+  border-radius: 5px 0 0 0;	
+}
+.time-result-table table th:last-child {
+  border-radius:0 5px 0 0;
+  border-right:1px solid #aaa;
+  box-shadow: 2px 2px 1px rgba(0,0,0,0.1);
+}
+.time-result-table table tr td {
+  padding: 2px 10px;
+  /* text-align: right; */
+}
+.time-result-table table tr td:first-child {
+  border-left: 1px solid #aaa;
+}
+.time-result-table table tr td:last-child {
+  border-right: 1px solid #aaa;
+  box-shadow: 2px 2px 1px rgba(0,0,0,0.1);
+}
+.time-result-table table tr {
+  background: #fff;
+}
+.time-result-table table tr:nth-child(2n+1) {
+  background: #f5f5f5;
+}
+.time-result-table table tr:last-child td {
+  border-bottom:1px solid #aaa;
+  box-shadow: 2px 2px 1px rgba(0,0,0,0.1);
+}
+.time-result-table table tr:last-child td:first-child {
+  border-radius: 0 0 0 5px;
+}
+.time-result-table table tr:last-child td:last-child {
+  border-radius: 0 0 5px 0;
+}
+.time-result-table table tr:hover {
+  background: #eee;
+  cursor:pointer;
+}
+
+.time-result-table table{
+  border-collapse:collapse;
+  margin:0 auto;
+}
+
+.time-result-table table tr:nth-child(odd){
+  background:#e6f2ff;
+}
+
+.left-text {
+  text-align: "left"
+}
+
+
+h3{
+  text-align: left;
+  padding-bottom: 10px;
+}
+
+.head2 {
+  padding: 0.5em;/*文字周りの余白*/
+  color: #494949;/*文字色*/
+  background: #fffaf4;/*背景色*/
+  border-left: solid 5px #ffaf58;/*左線（実線 太さ 色）*/
+}
+
+.head3 {
+  border-bottom: double 5px #FFC778;
+}
+
+.headertop {
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 10000;
+}
+
+#chart-boxes {
+  padding-top: 10px;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
+}
+
+li {
+  float: left;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+/* Change the link color to #111 (black) on hover */
+li a:hover {
+  background-color: rgb(65, 65, 65);
+}
+
+.active {
+  background-color: #4CAF50;
+}
+
+ul {
+  border: 1px solid #e7e7e7;
+  background-color: #f3f3f3;
+}
+
+li a {
+  color: #666;
+}

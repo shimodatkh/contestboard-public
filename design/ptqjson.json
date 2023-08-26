@@ -1,0 +1,241 @@
+{
+    "classes": [
+        {
+            "attribute": "fingerprint",
+            "checksum": "4E8EAE12D58B73C2F3EFAD4903F0402F",
+            "distillate": "SELECT chair",
+            "example": {
+                "Query_time": "0.445088",
+                "query": "\/*[3] L586 *\/SELECT COUNT(*) FROM chair WHERE price >= 9000 AND price < 12000 AND stock > 0",
+                "ts": "2021-06-09T14:00:21"
+            },
+            "fingerprint": "select count(*) from chair where price >= ? and price < ? and stock > ?",
+            "histograms": {
+                "Query_time": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    26,
+                    133,
+                    0,
+                    0
+                ]
+            },
+            "metrics": {
+                "Lock_time": {
+                    "avg": "0.000097",
+                    "max": "0.003525",
+                    "median": "0.000024",
+                    "min": "0.000013",
+                    "pct": "0.056443",
+                    "pct_95": "0.000194",
+                    "stddev": "0.000402",
+                    "sum": "0.015452"
+                },
+                "Query_length": {
+                    "avg": "90",
+                    "max": "92",
+                    "median": "88",
+                    "min": "90",
+                    "pct": "0",
+                    "pct_95": "88",
+                    "stddev": "0",
+                    "sum": "14442"
+                },
+                "Query_time": {
+                    "avg": "0.148568",
+                    "max": "0.445088",
+                    "median": "0.121740",
+                    "min": "0.072099",
+                    "pct": "0.056443",
+                    "pct_95": "0.253088",
+                    "stddev": "0.064822",
+                    "sum": "23.622311"
+                },
+                "Rows_examined": {
+                    "avg": "4739",
+                    "max": "4946",
+                    "median": "4595",
+                    "min": "4645",
+                    "pct": "0",
+                    "pct_95": "4825",
+                    "stddev": "93",
+                    "sum": "753564"
+                },
+                "Rows_sent": {
+                    "avg": "1",
+                    "max": "1",
+                    "median": "1",
+                    "min": "1",
+                    "pct": "0",
+                    "pct_95": "1",
+                    "stddev": "0",
+                    "sum": "159"
+                },
+                "host": {
+                    "value": "localhost"
+                },
+                "user": {
+                    "value": "isucon"
+                }
+            },
+            "query_count": 159,
+            "tables": [
+                {
+                    "create": "SHOW CREATE TABLE `chair`\\G",
+                    "status": "SHOW TABLE STATUS LIKE 'chair'\\G"
+                }
+            ],
+            "ts_max": "2021-06-09T14:00:22",
+            "ts_min": "2021-06-09T13:59:51"
+        },
+        {
+            "attribute": "fingerprint",
+            "checksum": "A05E7EAEBDC84257F5BB5BE35880C871",
+            "distillate": "SELECT estate",
+            "example": {
+                "Query_time": "1.431425",
+                "query": "\/*[N1b] *\/SELECT * FROM estate WHERE ST_Contains(ST_PolygonFromText('POLYGON((33.086540 136.831104,33.242485 136.685443,33.367310 136.620111,33.497866 136.584893,33.746119 136.625209,33.743606 136.707218,33.722572 136.721631,33.498932 136.790522,33.236378 136.843264,33.086540 136.831104))'), point) ORDER BY popularity_desc ASC, id ASC LIMIT 50",
+                "ts": "2021-06-09T13:59:50"
+            },
+            "fingerprint": "select * from estate where st_contains(st_polygonfromtext(?), point) order by popularity_desc, id limit ?",
+            "histograms": {
+                "Query_time": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    180,
+                    41,
+                    4,
+                    0
+                ]
+            },
+            "metrics": {
+                "Lock_time": {
+                    "avg": "0.000674",
+                    "max": "0.030862",
+                    "median": "0.000098",
+                    "min": "0.000051",
+                    "pct": "0.079872",
+                    "pct_95": "0.002339",
+                    "stddev": "0.002601",
+                    "sum": "0.151651"
+                },
+                "Query_length": {
+                    "avg": "302",
+                    "max": "387",
+                    "median": "299",
+                    "min": "240",
+                    "pct": "0",
+                    "pct_95": "329",
+                    "stddev": "26",
+                    "sum": "68070"
+                },
+                "Query_time": {
+                    "avg": "0.085634",
+                    "max": "1.431425",
+                    "median": "0.041617",
+                    "min": "0.011051",
+                    "pct": "0.079872",
+                    "pct_95": "0.198301",
+                    "stddev": "0.178297",
+                    "sum": "19.267744"
+                },
+                "Rows_examined": {
+                    "avg": "1019",
+                    "max": "29500",
+                    "median": "400",
+                    "min": "0",
+                    "pct": "0",
+                    "pct_95": "1357",
+                    "stddev": "3845",
+                    "sum": "229343"
+                },
+                "Rows_sent": {
+                    "avg": "45",
+                    "max": "50",
+                    "median": "49",
+                    "min": "0",
+                    "pct": "0",
+                    "pct_95": "49",
+                    "stddev": "12",
+                    "sum": "10166"
+                },
+                "host": {
+                    "value": "localhost"
+                },
+                "user": {
+                    "value": "isucon"
+                }
+            },
+            "query_count": 225,
+            "tables": [
+                {
+                    "create": "SHOW CREATE TABLE `estate`\\G",
+                    "status": "SHOW TABLE STATUS LIKE 'estate'\\G"
+                }
+            ],
+            "ts_max": "2021-06-09T14:00:26",
+            "ts_min": "2021-06-09T13:59:49"
+        }
+    ],
+    "global": {
+        "files": [
+            {
+                "name": "\/var\/log\/mysql\/mysql-slow.log",
+                "size": 55665555
+            }
+        ],
+        "metrics": {
+            "Lock_time": {
+                "avg": "0.000699",
+                "max": "0.120404",
+                "median": "0.000028",
+                "min": "0.000000",
+                "pct_95": "0.005107",
+                "stddev": "0.002951",
+                "sum": "1.969300"
+            },
+            "Query_length": {
+                "avg": "19555",
+                "max": "246844",
+                "median": "84",
+                "min": "6",
+                "pct_95": "216907",
+                "stddev": "63173",
+                "sum": "55088452"
+            },
+            "Query_time": {
+                "avg": "0.087177",
+                "max": "1.431425",
+                "median": "0.061487",
+                "min": "0.010025",
+                "pct_95": "0.265742",
+                "stddev": "0.105540",
+                "sum": "245.577517"
+            },
+            "Rows_examined": {
+                "avg": "12765",
+                "max": "31000",
+                "median": "4825",
+                "min": "0",
+                "pct_95": "29343",
+                "stddev": "13245",
+                "sum": "35961247"
+            },
+            "Rows_sent": {
+                "avg": "6",
+                "max": "50",
+                "median": "0",
+                "min": "0",
+                "pct_95": "49",
+                "stddev": "13",
+                "sum": "18512"
+            }
+        },
+        "query_count": 2817,
+        "unique_query_count": 144
+    }
+}

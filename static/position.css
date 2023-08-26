@@ -1,0 +1,54 @@
+/* #score-box {
+    float: left;
+} */
+
+#alpChart2 {
+    float: right;
+}
+
+#ptq-box {
+    float: left;
+}
+
+#prof-box {
+    float: left;
+}
+
+#ptq-box {
+    float: right;
+}
+
+.float-clear-box {
+	clear:both;
+}
+
+.left-chart {
+    float: left;
+}
+
+.right-chart {
+    float: right;
+}
+
+/* #div-alp {
+	background-color:#2ECFCA;
+}
+#div-prof {
+	background-color:#F9F3DE;
+} */
+
+/* .clearfix:after {
+	display:block;
+	clear:both;
+	height:0px;
+	visibility:hidden;
+	content:".";
+}
+.clearfix {
+	min-height: 1px; 
+}
+* html .clearfix {
+	height: 1px;
+	height: auto;
+	overflow: hidden;
+} */
